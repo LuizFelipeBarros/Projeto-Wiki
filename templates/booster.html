@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booster Aberto!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Suas Cartas Sorteadas</h1>
+        
+        <div class="grid-cartas">
+            {% for carta in cartas %}
+                <div class="card-item">
+                    <!-- Montando a URL da imagem usando o ID da carta -->
+                    <!-- Adicionado /pt/ antes do ID -->
+                    {% if carta.id %}
+                        <img src="https://assets.tcgdex.net/pt/{{ carta.id }}/low.png"
+                        class="imagem_pk"
+                        style="width: 200px; margin: 10px;" />
+                    {% endif %}
+                    <p class="nome_pk">{{ carta.name }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <hr>
+        <a href="/" class="btn-voltar">Abrir outro Booster</a>
+    </div>
+</body>
+</html>
