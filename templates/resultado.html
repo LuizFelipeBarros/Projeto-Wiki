@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados da Busca - Anime</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Resultados para: {{ request.args.get('q') }}</h1>
+        
+        <form action="/busca" method="get">
+            <input type="text" name="q" placeholder="Nova busca..." required>
+            <button type="submit">Pesquisar</button>
+        </form>
+
+        <!-- botões de filtro -->
+        <div class="filtro">
+            <button id="btn-anime">Anime</button>
+            <button id="btn-personagem">Personagem</button>
+        </div>
+
+
+        <hr>
+
+        <!-- Bloco de Animes -->
+        <div class="secao" id="section-anime">
+            <h2>📺 Animes</h2>
+            {% for item in anime.data %}
+                <div class="card">
+                    <img src="{{ item.images.jpg.image_url }}" class="imagem_resultado">
+                    <div class="info">
+                        <h3>{{ item.title }}</h3>
+                        <p><strong>Nota:</strong> ⭐ {{ item.score if item.score else 'N/A' }}</p>
+                        <p><strong>Estúdio:</strong> 
+                            {% for studio in item.studios %}
+                                {{ studio.name }}{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        <p class="sinopse">
+                            {{ (item.synopsis[:250] + '...') if item.synopsis else 'Sinopse não disponível.' }}
+                        </p>
+                    </div>
+                </div>
+                <hr>
+            {% else %}
+                <p>Nenhum anime encontrado.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Bloco de Personagens -->
+        <div class="secao" id="section-personagem">
+            <h2>👤 Personagens</h2>
+            {% for char in personagem.data %}
+                <div class="card-personagem">
+                    <img src="{{ char.images.jpg.image_url }}" class="imagem_personagem">
+                    <div class="personagem-content">
+                        <h3 class="nome_personagem">{{ char.name }}</h3>
+                        <div class="bio_personagem">
+                            {% if char.about %}
+                                {% for sentence in char.about.split('.') %}
+                                    {% if sentence.strip() %}
+                                        <p>{{ sentence.strip() }}.</p>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <p>Biografia não disponível.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            {% else %}
+                <p>Nenhum personagem encontrado.</p>
+            {% endfor %}
+        </div>
+
+        <a href="/">Voltar para o início</a>
+    </div>
+
+    <script>
+    // ================================
+    // 1️⃣ Pegando elementos do HTML
+    // ================================
+
+    // Aqui estamos "pegando" uma parte do HTML pelo ID.
+    // getElementById procura um elemento que tenha id="section-anime"
+    const animeSection = document.getElementById('section-anime');
+
+    // Aqui fazemos a mesma coisa, mas para a seção de personagem
+    const charSection = document.getElementById('section-personagem');
+
+
+    // ==========================================
+    // 2️⃣ Pegando os botões que o usuário clica
+    // ==========================================
+
+    // Aqui pegamos o botão que tem id="btn-anime"
+    const btnAnime = document.getElementById('btn-anime');
+
+    // Aqui pegamos o botão que tem id="btn-personagem"
+    const btnPersonagem = document.getElementById('btn-personagem');
+
+
+    // ==========================================
+    // 3️⃣ Adicionando evento de clique no botão Anime
+    // ==========================================
+
+    // addEventListener significa:
+    // "Quando acontecer alguma coisa, execute essa função"
+
+    // Aqui estamos dizendo:
+    // Quando o botão Anime for clicado...
+    btnAnime.addEventListener('click', () => {
+
+        // Mostrar a seção de anime
+        // style.display = 'block' faz o elemento aparecer na tela
+        animeSection.style.display = 'block';
+
+        // Esconder a seção de personagem
+        // style.display = 'none' faz o elemento sumir
+        charSection.style.display = 'none';
+    });
+
+
+    // ==========================================
+    // 4️⃣ Adicionando evento de clique no botão Personagem
+    // ==========================================
+
+    // Quando o botão Personagem for clicado...
+    btnPersonagem.addEventListener('click', () => {
+
+        // Esconder a seção de anime
+        animeSection.style.display = 'none';
+
+        // Mostrar a seção de personagem
+        charSection.style.display = 'block';
+    });
+
+</script>
+</body>
+</html>

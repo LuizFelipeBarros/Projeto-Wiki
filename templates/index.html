@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokémon TCG - Escolha seu Booster</title>
+    <title>Wiki Anime</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>Escolha uma Coleção</h1>
+        <h1>Wiki Anime e Personagens</h1>
         
+        <!-- O formulário envia para a rota /busca usando GET -->
+        <form action="/busca" method="get">
+            <input type="text" name="q" placeholder="Ex: Naruto, One Piece..." required>
+            <button type="submit">Pesquisar</button>
+        </form>
+
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <ul class="flashes">
@@ -19,22 +25,6 @@
                 </ul>
             {% endif %}
         {% endwith %}
-        
-        <div class="lista-colecoes">
-            {% for colecao in colecoes %}
-                <!-- Ao clicar, ele vai para a rota /abrir/id-da-colecao -->
-                <a href="/abrir/{{ colecao.id }}" class="btn-booster">
-                    {{ colecao.name }}
-                    {% if colecao.cardCount is defined and colecao.cardCount.total is defined %}
-                        ({{ colecao.cardCount.total }} cartas)
-                    {% endif %}
-                </a>
-                <br><br>
-            {% endfor %}
-        </div>
-        
-        <hr>
-        <p>Clique em uma coleção para abrir um booster de 6 cartas!</p>
     </div>
 </body>
 </html>
