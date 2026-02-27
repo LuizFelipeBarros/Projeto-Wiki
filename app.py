@@ -51,11 +51,14 @@ def buscar_anime(): # Removido o argumento nome_anime
         dados_anime = anime_future.result()
         dados_char = char_future.result()
 
-    # filtrar animes com classificação adulta (R, R+, Rx)
+    # filtrar apenas Hentai e Ecchi pelos gêneros
     safe_list = []
     for item in dados_anime.get('data', []):
-        rating = item.get('rating', '')
-        if rating and rating.startswith('R'):
+        genres = item.get('genres', [])
+        genre_names = [g.get('name', '').lower() for g in genres]
+        
+        # Remove apenas se for Hentai ou Ecchi
+        if 'hentai' in genre_names or 'ecchi' in genre_names:
             continue
         safe_list.append(item)
     dados_anime['data'] = safe_list
